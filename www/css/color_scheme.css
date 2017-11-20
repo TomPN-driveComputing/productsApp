@@ -1,0 +1,30 @@
+body
+{
+    --mainHue: 180;     /* 0 is red, 120 green, 240 blue */
+    --mainSat: 100%;    /* 100% by default */
+    --mainLight: 50%;   /* 50% by default. Recommend you keep it above 35% */
+    
+    --accentHue1: calc(var(--mainHue) - 15);
+    --accentHue2: calc(var(--mainHue) + 15);
+    
+    --darkLight: calc(var(--mainLight) - 10%);
+    --paleLight: calc(var(--mainLight) + 15%);
+    --vPaleLight: calc(var(--mainLight) + 25%);
+    
+    --mainBackground: hsl(var(--accentHue1), var(--mainSat), var(--mainLight));    /* Due to a slight SNAFU of coding, the mainBackground uses the accentHue1 color, */
+    --accentBackground: hsl(var(--mainHue), var(--mainSat), var(--darkLight));     /* and the accentBackground uses the mainHue color. It does look a bit better like this, though. */
+    --hoverBackground: hsl(var(--accentHue1), var(--mainSat), var(--paleLight));
+    --activeBackground: hsl(var(--accentHue1), var(--mainSat), var(--vPaleLight));
+    --border: hsl(var(--accentHue2), var(--mainSat), var(--mainLight));
+}
+
+html
+{
+    font-family: Dosis;
+}
+
+@font-face
+{
+    src: url(../fonts/Dosis-Regular.ttf);
+    font-family: Dosis;
+}

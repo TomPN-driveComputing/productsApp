@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Items</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <link rel='stylesheet' type='text/css' href= 'js/jquery-ui.min.css'>
+        <link rel='stylesheet' type='text/css' href= 'css/color_scheme.css'>
+        <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto" rel="stylesheet">
+        <script>
+            
+            showAllProducts();
+            
+            function showAllProducts()
+            {
+                $.ajax({
+                    url:"http://10.0.4.106:81/app_ajax/ajax_products/ajax_calls.php",
+                    cache:false,
+                    async:true,
+                    type:'POST',
+                    data:{'request':'getProducts'},
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        var products = data.productData;
+                        for (var i=0; i<products.length; i++)
+                        {
+                            $("#tableBody").append("<tr class='inStock' onclick='redirectToProduct("+products[i].prodId+")'><td>"+products[i].prodName+"</td></tr>");
+                        }
+                        $("#tableBody").append("<tr id='disclaimer'><td>DISCLAIMER: We accept no responsibilty for equipment that is broken, "+
+                                               "defective or otherwise works in any way other than that which is advertised.</td></tr>");
+                    }
+                });
+            }
+            
+            function getEnter(e)
+            {
+                if (e.keyCode == 13)
+                {
+                    searchItems();
+                }
+            }
+            
+            function redirectToProduct(productId)
+            {
+                sessionStorage.setItem("productId",productId);
+                window.location = "productPage.html";
+            }
+            
+            function viewBasket()
+            {
+                window.location = "shoppingBasket.html";
+            }
+            
+            function searchItems()
+            {
+                var productName = $("#searchProduct").val();
+                $.ajax({
+                    url:"http://10.0.4.106:81/app_ajax/ajax_products/ajax_calls.php",
+                    cache:false,
+                    async:true,
+                    type:'POST',
+                    data:{'request':'getProductByName','productName':productName},
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        var products = data.productData;
+                        if (products != null)
+                        {
+                            redirectToProduct(products.prodId);
+                        }
+                        else
+                        {
+                            alert("We're sorry, but we couldn't find anything matching your search. Please make sure that all words are spelled and capitalised correctly."+
+                                               " If they are, then we're really sorry, because we don't sell that item.");
+                            $("#searchProduct").val("");
+                        }
+                    }
+                });
+            }
+            
+       </script>
+        <style>
+            html, body {width:98%;height:98%;}
+            table {width:100%;}
+            td, th {width:98%;height:6vh;padding:0.5%;margin:0.5%;border:1px var(--border);border-style:solid none;text-align:center;}
+            th {background-color:var(--mainBackground);height:10vh;font-size:8vmin;position:sticky;top:0;}
+            
+            button {width:8vh;height:8vh;margin-right:1vh;float:right;font-size:3.5vh;background-color:var(--accentBackground);border:transparent;}
+            
+            .filling {margin-top:2vh;padding:1vh;}
+            
+            .inStock:hover {background-color:var(--hoverBackground);}
+            .inStock:active {background-color:var(--activeBackground);}
+            
+            #disclaimer {background-color:var(--accentBackground);font-size:3vmin;}
+            #navigation {background-color:var(--accentBackground);position:sticky;top:10vh;}
+            #searchProduct {width:27vh;}
+       </style>
+   <link rel="stylesheet" href="css/app.css">
+    </head>
+
+
+    <body>
+        <div id="mainBody">
+            <table id="prodTable">
+                <tr>
+                    <th>
+                        ACME Products
+                    </th>
+                </tr>
+                <tr>
+                    <td id='navigation';>
+                        <button onclick="viewBasket()" type="button">
+                            <img alt="basket" style="width:5vh;height:5vh;" src="images/basket.png">
+                        </button>
+                        <button onclick="searchItems()" type="button">
+                            <img alt="search" style="width:5vh;height:5vh;" src="images/search.png">
+                        </button>
+                        <input type="text" id="searchProduct" class="filling" placeholder="Search..." onkeypress="getEnter(event)">
+                    </td>
+                </tr>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </body>
+
+
+</html>

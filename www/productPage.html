@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Product information</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <link rel='stylesheet' type='text/css' href= 'js/jquery-ui.min.css'>
+        <link rel='stylesheet' type='text/css' href= 'css/color_scheme.css'>
+        <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto" rel="stylesheet">
+        <script>
+            var productId = sessionStorage.getItem("productId");
+            
+            showProduct();
+            
+            var prodName = "";
+            var prodStock = "";
+            
+            function showProduct()
+            {
+                $.ajax({
+                    url:"http://10.0.4.106:81/app_ajax/ajax_products/ajax_calls.php",
+                    cache:false,
+                    async:true,
+                    type:'POST',
+                    data:{'request':'getProductById','productId':productId},
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        var products = data.productData;
+                        var cost = products.price;
+                        cost = parseFloat(cost).toFixed(2);
+                        
+                        var imageLink = "images/"+products.prodName+".jpg";
+                        
+                        $("#header").append(products.prodName);
+                        prodName = products.prodName;
+                        
+                        $("#productImage").attr("src",imageLink)
+                        
+                        $("#cost").append("£"+cost);
+                        $("#description").append(products.prodDesc);
+                        
+                        if (products.stock > 0)
+                        {
+                            $("#stock").append("In stock");
+                            prodStock = Number(products.stock);
+                        }
+                        else
+                        {
+                            $("#stock").append("OUT OF STOCK");
+                            $("#stock").attr("style","background-color:#ff7f7f;")
+                            $("#qty").attr("disabled", true);
+                            $("#purchase").attr("disabled", true);
+                        }
+                    }
+                });
+            }
+            
+            function goBack()
+            {
+                window.location = "index.html";
+            }
+            
+            function addToBasket()
+            {
+                var quantity = Number($("#qty").val());
+                if (quantity >= 1 && quantity <= prodStock)
+                {
+                    localStorage.setItem(productId, quantity);
+                    
+                    alert(quantity+"x '"+prodName+"' have been added to the basket.");
+                    goBack();
+                }
+                else
+                {
+                    alert("You can't buy "+quantity+" "+prodName+"s!");
+                }
+            }
+            
+            function getEnter(e)
+            {
+                if (e.keyCode == 13)
+                {
+                    addToBasket();
+                }
+            }
+       </script>
+        <style>
+            html, body {width:98%;height:98%;}
+            div {width:96%;text-align:center;}
+            button {width:96%;height:8vh;font-size:3.5vh;background-color:var(--accentBackground);border:transparent;margin:0.1vh;}
+            
+            .borders {border:1px var(--border);border-style:solid none;}
+            .filling {margin:1%;padding:1%;}
+            
+            .no-close .ui-dialog-titlebar-close {display:none;}
+            
+            #header {background-color:var(--mainBackground);font-size:5vh;}
+            #cost {height:3vh;}
+            #stock {height:3vh;}
+            #description {height:14.5vh;font-size:2.5vh;}
+            #qty {height:4vh;}
+            
+            #productImage {width:45vw;height:45vw;margin:auto;margin-top:5vh;margin-bottom:5vh;}
+       </style>
+   <link rel="stylesheet" href="css/app.css">
+    </head>
+
+
+    <body>
+        
+        <div id="header" class="borders filling">
+        </div>
+        
+        <div id="picture" class="borders filling">
+            <img id="productImage" alt="Product image" src="">
+        </div>
+        
+        <div id="cost" class="borders filling">
+        </div>
+        
+        <div id="description" class="borders filling">
+        </div>
+        
+        <div id="stock" class="borders filling">
+        </div>
+        
+        <div id="qtyBox" class="borders filling">
+            Quantity: <input type="text" maxlength=2 size=2 name="qty" id="qty" placeholder="Qty" value="1" onkeypress="getEnter(event)">
+        </div>
+        
+        <div id="buttons" class="borders filling">
+            <button id="back" type="button" onclick="goBack()">Go back</button>
+            <button id="purchase" type="button" onclick="addToBasket()">Add to basket</button>
+        </div>
+        
+    </body>
+
+
+</html>
