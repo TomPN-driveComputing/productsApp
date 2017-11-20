@@ -32,8 +32,29 @@
                         }
                         $("#tableBody").append("<tr id='disclaimer'><td>DISCLAIMER: We accept no responsibilty for equipment that is broken, "+
                                                "defective or otherwise works in any way other than that which is advertised.</td></tr>");
+                        
+                        var basketTotal = findTotalItems();
+                        if (basketTotal != 0)
+                        {
+                            $("#basketTotal").html(basketTotal);
+                        }
+                        else
+                        {
+                            $("#basketTotal").css("background-color","transparent");
+                        }
                     }
                 });
+            }
+            
+            function findTotalItems()
+            {
+                var productIds = Object.keys(localStorage);
+                var total = "0";
+                for (var i = 0;i<productIds.length;i++)
+                {
+                    total = Number(total) + Number(localStorage.getItem(productIds[i]));
+                }
+                return total;
             }
             
             function getEnter(e)
@@ -81,7 +102,6 @@
                     }
                 });
             }
-            
        </script>
         <style>
             html, body {width:98%;height:98%;}
@@ -99,6 +119,7 @@
             #disclaimer {background-color:var(--accentBackground);font-size:3vmin;}
             #navigation {background-color:var(--accentBackground);position:sticky;top:10vh;}
             #searchProduct {width:27vh;}
+            #basketTotal {background-color:black;color:white;border-radius:50%;padding:1%;font-size:2.5vh;position:absolute;top:0;right:1%;}
        </style>
    <link rel="stylesheet" href="css/app.css">
     </head>
@@ -115,7 +136,8 @@
                 <tr>
                     <td id='navigation';>
                         <button onclick="viewBasket()" type="button">
-                            <img alt="basket" style="width:5vh;height:5vh;" src="images/basket.png">
+                            <span id="basketTotal"></span>
+                            <img alt="basket" style="width:5vh;height:5vh;z-index:-1;" src="images/basket.png">
                         </button>
                         <button onclick="searchItems()" type="button">
                             <img alt="search" style="width:5vh;height:5vh;" src="images/search.png">
