@@ -5,7 +5,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "src": "jsapp/template-blank-cordova-ad-project/sample.zip",
       "projectGuid": "5fb10e11-80cf-4061-82e6-56c1e5f6d0a4",
-      "lastModifiedDate": 1510566724201,
+      "lastModifiedDate": 1511257469732,
       "creationDate": 1510566688842
     },
     "sourceDirectory": "www",
@@ -67,6 +67,29 @@
         "checksum": "47137083",
         "gitref": "",
         "description": "Cordova Splashscreen Plugin"
+      },
+      {
+        "id": "cordova-plugin-vibration",
+        "name": "Vibration",
+        "version": "2.1.1",
+        "originType": "cordova.io",
+        "origin": "cordova-plugin-vibration",
+        "gitref": "",
+        "paramvals": {},
+        "sourceLocation": "plugins/cordova-plugin-vibration",
+        "selectedState": "Included",
+        "checksum": "cf9984de",
+        "dependsOn": [],
+        "topLevel": true,
+        "cordovaVersion": ">=3.0.0",
+        "permissions": {
+          "android:name": [
+            "android.permission.VIBRATE"
+          ]
+        },
+        "description": "Cordova Vibration Plugin",
+        "data": {},
+        "dependedBy": []
       }
     ],
     "buildConfigurations": {

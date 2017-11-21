@@ -7,24 +7,23 @@
         <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
         <script src="js/jquery.min.js"></script>
         <script src="js/jquery-ui.min.js"></script>
+        <script src="js/productsApp_javaScript.js"></script>
         <link rel='stylesheet' type='text/css' href= 'js/jquery-ui.min.css'>
         <link rel='stylesheet' type='text/css' href= 'css/color_scheme.css'>
         <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto" rel="stylesheet">
         <script>
-            getBasket()
+            
+            getBasket();
             
             function getBasket()
             {
                 var total = "";
                 var productIds = Object.keys(localStorage);
-                
-                var items = "";
-                var difItems = "";
                 for (var i=0;i<productIds.length;i++)
                 {
                     var productId = productIds[i];
                     $.ajax({
-                        url:"http://10.0.4.106:81/app_ajax/ajax_products/ajax_calls.php",
+                        url:ajaxLink,
                         cache:false,
                         async:true,
                         type:'POST',
@@ -49,10 +48,6 @@
                                                    "<br><br>Purchase: <input type='checkbox' class='checkbox' id='buy"+products.prodId+"'>"+
                                                    "<br><br><input type='button' class='littleButton' onclick='clearItem("+products.prodId+")' value='Remove item'><br><br></td></tr>");
                             $("#totalCost").html("Total cost: £"+total.toFixed(2));
-                            difItems++;
-                            items = Number(items) + Number(qty);
-                            $("#items").html(items);
-                            $("#difItems").html(difItems);
                         }
                     });
                 }
@@ -67,7 +62,7 @@
                     if ($("#buy"+productIds[i]).is(":checked"))
                     {
                         $.ajax({
-                            url:"http://10.0.4.106:81/app_ajax/ajax_products/ajax_calls.php",
+                            url:ajaxLink,
                             cache:false,
                             async:true,
                             type:'POST',
@@ -114,7 +109,9 @@
             
             function goBack()
             {
-                window.location = "index.html";
+                var time = 250;
+                vibrate(time);
+                setTimeout(function(){window.location = "index.html"},time);
             }
             
             function changeQty(prodId,stock)
@@ -167,11 +164,6 @@
                 <th>
                     Basket
                 </th>
-            </tr>
-            <tr>
-                <td class="fontSize">
-                    <span id="items">0</span> items (<span id="difItems">0</span> different)
-                </td>
             </tr>
             <tbody id="tableBody">
             </tbody>

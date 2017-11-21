@@ -1,6 +1,6 @@
 body
 {
-    --mainHue: 180;     /* 0 is red, 120 green, 240 blue */
+    --mainHue: 90;     /* 0 is red, 120 green, 240 blue */
     --mainSat: 100%;    /* 100% by default */
     --mainLight: 50%;   /* 50% by default. Recommend you keep it above 35% */
     
