@@ -42,7 +42,7 @@
                                                    "<br><br>Unit cost: £"+unitCost.toFixed(2)+
                                                    "&nbsp;&nbsp;&nbsp;&nbsp;Qty: "+qty+
                                                    "<br>Total cost: £"+prodCost.toFixed(2)+
-                                                   "<br><br><input type='text' maxlength=2 size=5 name='qty' class='qty' id='qty"+products.prodId+"' placeholder='Qty'"+ "onkeypress='getEnter(event,"+products.prodId+","+products.stock+")'>"+
+                                                   "<br><br><input type='text' maxlength=2 size=5 name='qty' class='textbox' id='qty"+products.prodId+"' placeholder='Qty'"+ "onkeypress='getEnter(event,"+products.prodId+","+products.stock+")'>"+
                                                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
                                                    "<input type='button' class='littleButton' onclick='changeQty("+products.prodId+","+products.stock+")' value='Change'>"+
                                                    "<br><br>Purchase: <input type='checkbox' class='checkbox' id='buy"+products.prodId+"'>"+
@@ -55,36 +55,49 @@
             
             function purchase()
             {
-                var productIds = Object.keys(localStorage);
-                var purchasing = "";
-                for (var i=0;i<productIds.length;i++)
+                var name = $("#buyerName").val();
+                var address = $("#buyerAddress").val();
+                var postcode = $("#buyerPostcode").val();
+                
+                if (name == "" || address == "" || postcode == "")
                 {
-                    if ($("#buy"+productIds[i]).is(":checked"))
-                    {
-                        $.ajax({
-                            url:ajaxLink,
-                            cache:false,
-                            async:true,
-                            type:'POST',
-                            data:{'request':'buyProduct','productId':productIds[i],'qty':localStorage.getItem(productIds[i])},
-                            dataType:'json',
-                            success:function()
-                            {
-                            }
-                        });
-                        purchasing ++;
-                        localStorage.removeItem(productIds[i]);
-                    }
+                    alert("You need to fill in your name, address and postcode");
                 }
                 
-                if (purchasing > 0)
-                {
-                    alert("Your items have been purchased.");
-                    goBack();
-                }
                 else
                 {
-                    alert("You haven't selected anything!");
+                    var productIds = Object.keys(localStorage);
+                    var purchasing = "";
+                    for (var i=0;i<productIds.length;i++)
+                    {
+                        if ($("#buy"+productIds[i]).is(":checked"))
+                        {
+                            $.ajax({
+                                url:ajaxLink,
+                                cache:false,
+                                async:true,
+                                type:'POST',
+                                data:{'request':'buyProduct','productId':productIds[i],'qty':localStorage.getItem(productIds[i]),'name':name,'address':address,'postcode':postcode},
+                                dataType:'json',
+                                success:function()
+                                {
+                                }
+                            });
+                            
+                            purchasing ++;
+                            localStorage.removeItem(productIds[i]);
+                        }
+                    }
+                    
+                    if (purchasing > 0)
+                    {
+                        alert("Your items have been purchased.");
+                        goBack();
+                    }
+                    else
+                    {
+                        alert("You haven't selected anything!");
+                    }
                 }
             }
             
@@ -150,7 +163,7 @@
             .fontSize {font-size:5vmin;}
             .checkbox {width:5vmin;height:5vmin;}
             .littleButton {height:5vh;}
-            .qty {height:4vh;}
+            .textbox {height:4vh;}
             
             #productImage {width:25vw;height:25vw;}
        </style>
@@ -170,6 +183,12 @@
         </table>
         <div class="borders filling">
             <h1 id="totalCost">Your basket is empty</h1>
+        </div>
+        <div id="buyerInfoBox" class="borders filling">
+            <br>
+            Name: <input id="buyerName" class="textbox" type="text" maxlength="50" placeholder="Name"><br><br>
+            Address: <input id="buyerAddress" class="textbox" type="text" placeholder="Address"><br><br>
+            Postcode: <input id="buyerPostcode" class="textbox" type="text" maxlength="10" size="10" placeholder="Postcode"><br><br>
         </div>
         <div id="buttons" class="borders filling">
             <button id="purchase" class="button" type="button" onclick="purchase()">Confirm purchase</button>

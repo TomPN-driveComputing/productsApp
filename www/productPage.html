@@ -45,10 +45,10 @@
                         $("#cost").append("£"+cost);
                         $("#description").append(products.prodDesc);
                         
-                        if (products.stock > 0)
+                        if (products.available > 0)
                         {
                             $("#stock").append("In stock");
-                            prodStock = Number(products.stock);
+                            prodStock = Number(products.available);
                         }
                         else
                         {
